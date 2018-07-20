@@ -2,7 +2,9 @@ package video.ysh.com.supervideo.bean;
 
 
 /**
- * Created by hejunlin on 17/3/28.
+ * - @Author:  闫世豪
+ * - @Time:  2018/7/18 下午7:04
+ * - @Email whynightcode@gmail.com
  */
 
 public class Site {

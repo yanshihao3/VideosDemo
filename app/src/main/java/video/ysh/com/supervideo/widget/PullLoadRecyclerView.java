@@ -34,8 +34,8 @@ public class PullLoadRecyclerView extends LinearLayout {
     private RecyclerView mRecyclerView;
     private View mFootView;
 
-    private boolean mIsRefresh;
-    private boolean mIsLoadMore;
+    private boolean mIsRefresh = false; //是否是刷新
+    private boolean mIsLoadMore = false; //是否是加载更多
 
     private AnimationDrawable mAnimationDrawable;
 
@@ -73,14 +73,14 @@ public class PullLoadRecyclerView extends LinearLayout {
         mRecyclerView = view.findViewById(R.id.recyclerview);
         mRecyclerView.setHasFixedSize(true); //设置固定大小
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());//使用默认动画
         mRecyclerView.setOnTouchListener(new OnTouchListener() {
-
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
                 return mIsRefresh || mIsLoadMore;
             }
         });
+
         mRecyclerView.addOnScrollListener(new RecyclerViewOnSroll());
         mRecyclerView.setHorizontalScrollBarEnabled(false); //隐藏滚动条
 
@@ -147,10 +147,11 @@ public class PullLoadRecyclerView extends LinearLayout {
                             super.onAnimationStart(animation);
                             mFootView.setVisibility(VISIBLE);
                             mAnimationDrawable.start();
-                            mOnPullLoadMoreListener.onLoadMore();
                         }
                     }).start();
             invalidate();
+            mOnPullLoadMoreListener.onLoadMore();
+
         }
     }
 
@@ -185,11 +186,6 @@ public class PullLoadRecyclerView extends LinearLayout {
                 }
             }
             //什么时候触发上拉加载更多
-            if (mSwipeRefreshLayout.isEnabled()) {
-                mSwipeRefreshLayout.setEnabled(true);
-            } else {
-                mSwipeRefreshLayout.setEnabled(false);
-            }
             //1。加载更多
             //2。count ==lastitem
             //3。mSwipeRefreshLayout 可用
@@ -197,13 +193,17 @@ public class PullLoadRecyclerView extends LinearLayout {
             //5。偏移量大于0
 
             if (!mIsLoadMore
-                    && count == lastItem
+                    && count-1 == lastItem
                     && mSwipeRefreshLayout.isEnabled()
                     && !mIsRefresh
                     && (dx > 0 || dy > 0)) {
                 mIsLoadMore = true;
-                loadMoreData();
+                loadMoreData();//在加载更多时,禁止mSwipeRefreshLayout使用
+                mSwipeRefreshLayout.setEnabled(false);
+            } else {
+                mSwipeRefreshLayout.setEnabled(true);
             }
+
         }
     }
 

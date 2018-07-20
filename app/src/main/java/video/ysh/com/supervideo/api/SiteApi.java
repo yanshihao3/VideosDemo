@@ -1,5 +1,6 @@
 package video.ysh.com.supervideo.api;
 
+import video.ysh.com.supervideo.bean.Channel;
 import video.ysh.com.supervideo.bean.Site;
 
 /**
@@ -9,13 +10,13 @@ import video.ysh.com.supervideo.bean.Site;
  */
 public class SiteApi {
 
-    public void onGetChannelAlums(int siteId, int channelId,int pageNo,int pageSize,OnGetChannelAblumsListener listener) {
+    public  static void onGetChannelAlums(int siteId, Channel channelId, int pageNo, int pageSize, OnGetChannelAlbumListener listener) {
         switch (siteId) {
             case Site.LETV:
-                new LetvApi().onGetChannelAlums(channelId,pageNo,pageSize,listener);
+                new LetvApi().onGetChannelAlbums(channelId,pageNo,pageSize,listener);
                 break;
             case Site.SOHU:
-                new SohuApi().onGetChannelAlums(channelId,pageNo,pageSize,listener);
+                new SohuApi().onGetChannelAlbums(channelId,pageNo,pageSize,listener);
                 break;
         }
     }

@@ -7,7 +7,14 @@
     tools:context=".activity.DetailListActivity">
 
     <include layout="@layout/top_actionbar" />
+    <video.ysh.com.supervideo.indircator.CoolIndicatorLayout
+        android:id="@+id/coolindicatorlayout"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:background="@android:color/white"
+        android:layout_height="@dimen/dimen_80dp">
 
+    </video.ysh.com.supervideo.indircator.CoolIndicatorLayout>
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"

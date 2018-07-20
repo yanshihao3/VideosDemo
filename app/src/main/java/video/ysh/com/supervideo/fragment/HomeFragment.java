@@ -1,9 +1,6 @@
 package video.ysh.com.supervideo.fragment;
 
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,83 +11,58 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.hejunlin.superindicatorlibray.CircleIndicator;
 import com.hejunlin.superindicatorlibray.LoopViewPager;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import video.ysh.com.supervideo.R;
 import video.ysh.com.supervideo.activity.DetailListActivity;
 import video.ysh.com.supervideo.bean.Channel;
-import video.ysh.com.supervideo.R;
-
 
 /**
- * A simple {@link Fragment} subclass.
+ * - @Author:  闫世豪
+ * - @Time:  2018/7/18 下午7:04
+ * - @Email whynightcode@gmail.com
  */
 public class HomeFragment extends BaseFragment {
-    private static final String TAG = "HomeFragment";
-    private int[] mDes = new int[]
-            {R.string.a_name, R.string.b_name, R.string.c_name, R.string.d_name
-                    , R.string.e_name
-            };
 
-    private int[] mImage = new int[]{R.mipmap.a, R.mipmap.b, R.mipmap.c,
-            R.mipmap.d, R.mipmap.e
-    };
-
-    private int[] mTitle = new int[]{R.string.channel_series, R.string.channel_movie, R.string.channel_comic,
-            R.string.channel_documentary, R.string.channel_music, R.string.channel_variety, R.string.channel_live, R.string.channel_favorite
-            , R.string.channel_history
-    };
-    private int[] mChannel = new int[]{R.mipmap.ic_show, R.mipmap.ic_movie,
-            R.mipmap.ic_comic, R.mipmap.ic_documentary, R.mipmap.ic_music, R.mipmap.ic_variety,
-            R.mipmap.ic_live, R.mipmap.ic_bookmark, R.mipmap.ic_history
-
-    };
-    private LoopViewPager mLoopViewPager;
-    private CircleIndicator mCircleIndicator;
+    private static final String TAG = HomeFragment.class.getSimpleName();
     private GridView mGridView;
 
-    private List<Channel> mChannels;
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_home;
+    }
 
     @Override
     protected void initView() {
-        mLoopViewPager = bindViewId(R.id.viewpager);
-        mCircleIndicator = bindViewId(R.id.indicator);
-        mLoopViewPager.setAdapter(new HomePagerAdapter());
-        mLoopViewPager.setLooperPic(true);
-        mCircleIndicator.setViewPager(mLoopViewPager);
+        Log.d(TAG, ">> initView ");
+        LoopViewPager viewPager = bindViewId(R.id.viewpager);
+        CircleIndicator indicator = bindViewId(R.id.indicator);
+        viewPager.setAdapter(new HomePicAdapter(getActivity()));
+        viewPager.setLooperPic(true);//5s自动轮播
+        indicator.setViewPager(viewPager); //indicator需要知道viewpager
         mGridView = bindViewId(R.id.gv_channnel);
-        mChannels = new ArrayList<>();
-        for (int i = 0; i < mChannel.length; i++) {
-            mChannels.add(new Channel(i, mTitle[i], mChannel[i]));
-        }
         mGridView.setAdapter(new ChannelAdapter());
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, ">> onItemClick " + position);
                 switch (position) {
                     case 6:
-                        //TODO  直播
-                        Log.e(TAG, "onItemClick: "+"直播" );
+                        //跳转直播
+                      //  LiveActivity.launch(getActivity());
                         break;
                     case 7:
-                        //TODO 收藏
-                        Log.e(TAG, "onItemClick: "+"收藏" );
-
+                        //跳转收藏
+                      //  FavoriteActivity.launch(getActivity());
                         break;
-
                     case 8:
-                        //TODO 历史
-                        Log.e(TAG, "onItemClick: "+"历史" );
-
+                        //跳转历史记录
+                       // HistoryActivity.launch(getActivity());
                         break;
                     default:
-                        //TODO 跳转到相应的频道界面
-                        Log.e(TAG, "onItemClick: "+"频道" );
-                        DetailListActivity.launchDetailListActivity(getContext(),position);
+                        //跳转对应频道
+                        DetailListActivity.launchDetailListActivity(getActivity(), position);
                         break;
                 }
             }
@@ -102,81 +74,78 @@ public class HomeFragment extends BaseFragment {
 
     }
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_home;
-    }
-
     class ChannelAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return mChannel.length;
+            return Channel.MAX_COUNT;
         }
 
         @Override
-        public Object getItem(int position) {
-            return mChannels.get(position);
+        public Channel getItem(int position) {
+            return new Channel(position + 1, getActivity());
         }
 
         @Override
         public long getItemId(int position) {
-            return mChannels.get(position).getId();
+            return position;
         }
-
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder viewHolder = null;
+            Channel chanel = getItem(position);
+            ViewHolder holder = null;
             if (convertView == null) {
-                viewHolder = new ViewHolder();
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.home_grid_item, parent, false);
-                viewHolder.mTextView = convertView.findViewById(R.id.tv_home_item_text);
-                viewHolder.mImageView = convertView.findViewById(R.id.iv_home_item_img);
-                convertView.setTag(viewHolder);
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.home_grid_item, null);
+                holder = new ViewHolder();
+                holder.textView = (TextView) convertView.findViewById(R.id.tv_home_item_text);
+                holder.imageView = (ImageView) convertView.findViewById(R.id.iv_home_item_img);
+                convertView.setTag(holder);
             } else {
-
-                viewHolder = (ViewHolder) convertView.getTag();
+                holder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.mTextView.setText(mTitle[position]);
-            viewHolder.mImageView.setImageResource(mChannel[position]);
+            holder.textView.setText(chanel.getChannelName());
+            int id = chanel.getChannelId();
+            int imgResId = -1;
+            switch (id) {
+                case Channel.SHOW:
+                    imgResId = R.mipmap.ic_show;
+                    break;
+                case Channel.MOVIE:
+                    imgResId = R.mipmap.ic_movie;
+                    break;
+                case Channel.COMIC:
+                    imgResId = R.mipmap.ic_comic;
+                    break;
+                case Channel.DOCUMENTRY:
+                    imgResId = R.mipmap.ic_movie;
+                    break;
+                case Channel.MUSIC:
+                    imgResId = R.mipmap.ic_music;
+                    break;
+                case Channel.VARIETY:
+                    imgResId = R.mipmap.ic_variety;
+                    break;
+                case Channel.LIVE:
+                    imgResId = R.mipmap.ic_live;
+                    break;
+                case Channel.FAVORITE:
+                    imgResId = R.mipmap.ic_bookmark;
+                    break;
+                case Channel.HISTORY:
+                    imgResId = R.mipmap.ic_history;
+                    break;
+            }
+
+            holder.imageView.setImageDrawable(getActivity().getResources().getDrawable(imgResId));
+
             return convertView;
         }
-
-        class ViewHolder {
-            TextView mTextView;
-            ImageView mImageView;
-        }
     }
 
-    class HomePagerAdapter extends PagerAdapter {
-
-        @Override
-        public int getCount() {
-            return 5;
-        }
-
-        @Override
-        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view == object;
-        }
-
-        @NonNull
-        @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            View view = LayoutInflater.from(getContext()).inflate(R.layout.home_pic_item, null);
-            TextView textView = view.findViewById(R.id.tv_dec);
-            ImageView imageView = view.findViewById(R.id.iv_img);
-            textView.setText(mDes[position]);
-            imageView.setImageResource(mImage[position]);
-            container.addView(view);
-            return view;
-        }
-
-        @Override
-        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-            container.removeView((View) object);
-        }
+    class ViewHolder{
+        TextView textView;
+        ImageView imageView;
     }
+
 }
