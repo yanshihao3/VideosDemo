@@ -16,6 +16,7 @@ import com.hejunlin.superindicatorlibray.LoopViewPager;
 
 import video.ysh.com.supervideo.R;
 import video.ysh.com.supervideo.activity.DetailListActivity;
+import video.ysh.com.supervideo.activity.LiveActivity;
 import video.ysh.com.supervideo.bean.Channel;
 
 /**
@@ -50,7 +51,7 @@ public class HomeFragment extends BaseFragment {
                 switch (position) {
                     case 6:
                         //跳转直播
-                      //  LiveActivity.launch(getActivity());
+                        LiveActivity.launch(getActivity());
                         break;
                     case 7:
                         //跳转收藏

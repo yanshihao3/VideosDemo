@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="video.ysh.com.supervideo">
 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:name=".AppManager"
@@ -22,9 +27,12 @@
         </activity>
         <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.GuideActivity" />
-        <activity android:name=".activity.BaseActivity" />
         <activity android:name=".activity.DetailListActivity" />
-        <activity android:name=".activity.AlbumDetailActivity"></activity>
+        <activity android:name=".activity.AlbumDetailActivity" />
+        <activity
+            android:name=".activity.PlayActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".activity.LiveActivity"></activity>
     </application>
 
 </manifest>

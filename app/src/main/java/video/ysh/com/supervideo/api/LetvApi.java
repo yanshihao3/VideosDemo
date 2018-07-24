@@ -345,6 +345,7 @@ public class LetvApi extends BaseSiteApi {
         OkHttpUtils.excute(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                Log.e(TAG, "onFailure: ");
                 if (listener != null) {
                     ErrorInfo info  = buildErrorInfo(url, "onGetVideoPlayUrl", e, ErrorInfo.ERROR_TYPE_URL);
                     listener.onGetFailed(info);
@@ -354,8 +355,7 @@ public class LetvApi extends BaseSiteApi {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    ErrorInfo info  = buildErrorInfo(url, "onGetVideoPlayUrl", null, ErrorInfo.ERROR_TYPE_HTTP);
-                    listener.onGetFailed(info);
+                    Log.e(TAG, "onResponse: " );
                     return;
                 }
                 String result = response.body().string();
@@ -411,6 +411,8 @@ public class LetvApi extends BaseSiteApi {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    ErrorInfo info  = buildErrorInfo(url, "onGetVideoPlayUrl", e, ErrorInfo.ERROR_TYPE_URL);
+                    listener.onGetFailed(info);
                 }
 
             }
@@ -419,15 +421,19 @@ public class LetvApi extends BaseSiteApi {
 
     //http://play.g3proxy.lecloud.com/vod/v2/MjYwLzkvNTIvbGV0di11dHMvMTQvdmVyXzAwXzIyLTEwOTczMjQ5NzUtYXZjLTE5OTY1OS1hYWMtNDgwMDAtMjU4NjI0MC04Mzk3NjQ4OC04MmQxMGVlM2I3ZTdkMGU5ZjE4YzM1NDViMWI4MzI4Yi0xNDkyNDA2MDE2MTg4Lm1wNA==?b=259&mmsid=64244666&tm=1492847915&key=22f2f114ed643e0d08596659e5834cd6&platid=3&splatid=347&playid=0&tss=ios&vtype=21&cvid=711590995389&payff=0&pip=83611a86979ddb3df8ef0fb41034f39c&format=1&sign=mb&dname=mobile&expect=3&p1=0&p2=00&p3=003&tag=mobile&pid=10031263&format=1&expect=1&termid=2&pay=0&ostype=android&hwtype=iphone
     //解析以上url返回的location字段,即为真实url
-    private void getRealUrl(final Video video, String normalUrl, final int type, final OnGetVideoPlayUrlListener listener) {
+    private void getRealUrl(final Video video, final String normalUrl, final int type, final OnGetVideoPlayUrlListener listener) {
         OkHttpUtils.excute(normalUrl, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                Log.e(TAG, "onFailure: "+e.toString());
+                ErrorInfo info  = buildErrorInfo(normalUrl, "onGetVideoPlayUrl", null, ErrorInfo.ERROR_TYPE_HTTP);
+                listener.onGetFailed(info);
                 // Nothing
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                Log.e(TAG, "onResponse: "+response.body().string());
                 if (!response.isSuccessful()) {
                     return;
                 }

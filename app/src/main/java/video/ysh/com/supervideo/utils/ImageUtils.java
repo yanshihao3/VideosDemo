@@ -24,7 +24,7 @@ public class ImageUtils {
 
     public static void disPlayImage(ImageView view, String url) {
         if (view != null && url != null) {
-            Glide.with(view.getContext()).load(url).into(view);
+            Glide.with(view.getContext()).load(url).fitCenter().into(view);
         }
     }
 

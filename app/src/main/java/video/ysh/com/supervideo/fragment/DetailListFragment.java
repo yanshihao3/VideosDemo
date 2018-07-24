@@ -218,9 +218,9 @@ public class DetailListFragment extends BaseFragment {
                     if (mChannId == Channel.DOCUMENTRY || mChannId == Channel.MOVIE
                             || mChannId == Channel.MUSIC || mChannId == Channel.VARIETY) {
                         //TODO 跳转到详情页
-                        AlbumDetailActivity.launch(getActivity(),album,0,true);
-                    }else {
                         AlbumDetailActivity.launch(getActivity(),album);
+                    }else {
+                        AlbumDetailActivity.launch(getActivity(),album,0,true);
 
                     }
                 }
